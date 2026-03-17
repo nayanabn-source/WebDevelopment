@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            margin: auto;
+            box-shadow: 0px 0px 10px gray;
+        }
+
+        input {
+            padding: 10px;
+            width: 70%;
+        }
+
+        button {
+            padding: 10px;
+            margin-top: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .loading {
+            color: orange;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Weather Dashboard</h2>
+    <input type="text" id="city" placeholder="Enter city">
+    <br>
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div id="output" class="result"></div>
+</div>
+
+<script>
+async function getWeather() {
+    let city = document.getElementById("city").value;
+    let output = document.getElementById("output");
+
+    if (city === "") {
+        output.innerHTML = "<p class='error'>Please enter a city name.</p>";
+        return;
+    }
+
+    output.innerHTML = "<p class='loading'>Loading...</p>";
+
+    try {
+        // Replace YOUR_API_KEY with your actual API key
+        let response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=2c1fa329c1af09b585d2b10d41c08f11&units=metric`);
+        
+        if (!response.ok) {
+            throw new Error("City not found");
+        }
+
+        let data = await response.json();
+
+        let temp = data.main.temp;
+        let weather = data.weather[0].description;
+
+        output.innerHTML = `
+            <h3>${city}</h3>
+            <p>Temperature: ${temp} °C</p>
+            <p>Condition: ${weather}</p>
+        `;
+    } catch (error) {
+        output.innerHTML = "<p class='error'>Error fetching data. Please try again.</p>";
+    }
+}
+</script>
+
+</body>
+</html>
