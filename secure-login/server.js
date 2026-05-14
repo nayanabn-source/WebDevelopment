@@ -19,3 +19,7 @@ app.use("/", authRoutes);
 app.listen(3000, () => {
   console.log("Server running at http://localhost:3000");
 });
+
+app.get("/", (req, res) => {
+  res.send("Secure Login API Running 🚀");
+});
